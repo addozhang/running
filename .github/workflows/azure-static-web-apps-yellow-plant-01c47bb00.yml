@@ -117,6 +117,6 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "dist" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "dist" # Built app content directory - fixed to match GitHub Pages workflow
+          output_location: "." # Built app content directory - fixed to match GitHub Pages workflow
           ###### End of Repository/Build Configurations ######
 
