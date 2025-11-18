@@ -1,0 +1,122 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      save_data_in_github_cache:
+        required: true
+        type: boolean
+        default: false
+      data_cache_prefix:
+        required: true
+        type: string
+        default: track_data
+  workflow_call:
+    inputs:
+      save_data_in_github_cache:
+        required: true
+        type: boolean
+        default: false
+      data_cache_prefix:
+        required: true
+        type: string
+        default: track_data
+    secrets:
+      AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_PLANT_01C47BB00:
+        required: true
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'azure-pages'
+  cancel-in-progress: true
+
+jobs:
+  build_and_deploy_job:
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      SAVE_DATA_IN_GITHUB_CACHE: ${{ steps.set_output.outputs.SAVE_DATA_IN_GITHUB_CACHE }}
+      DATA_CACHE_PREFIX: ${{ steps.set_output.outputs.DATA_CACHE_PREFIX }}
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          # if your default branches is not master, please change it here
+          ref: master
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Cache Data Files
+        if: inputs.save_data_in_github_cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            activities
+            assets
+            GPX_OUT
+            TCX_OUT
+            FIT_OUT
+            Workouts
+            run_page/data.db
+            src/static/activities.json
+            imported.json
+          key: ${{ inputs.data_cache_prefix }}-${{ github.sha }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ inputs.data_cache_prefix }}-${{ github.sha }}-
+            ${{ inputs.data_cache_prefix }}-
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Enable corepack
+        run: npm install -g corepack@latest && corepack enable pnpm
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: PATH_PREFIX=/$REPO_NAME pnpm build
+
+      - name: Set Output
+        id: set_output
+        env:
+          SAVE_DATA_IN_GITHUB_CACHE: ${{ inputs.save_data_in_github_cache }}
+          DATA_CACHE_PREFIX: ${{ inputs.data_cache_prefix }}
+        run: |
+          echo "SAVE_DATA_IN_GITHUB_CACHE=$SAVE_DATA_IN_GITHUB_CACHE" >> "$GITHUB_OUTPUT"
+          echo "DATA_CACHE_PREFIX=$DATA_CACHE_PREFIX" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to Azure Static Web App
+        id: deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_PLANT_01C47BB00 }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          action: "upload"
+          skip_app_build: true
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
+          app_location: "" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "dist" # Built app content directory - fixed to match GitHub Pages workflow
+          ###### End of Repository/Build Configurations ######
+
