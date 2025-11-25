@@ -20,10 +20,10 @@ const data: ISiteMetadataResult = {
   logo: '/images/logo.png',
   description: 'Personal site and blog',
   navLinks: [
-    {
-      name: 'Summary',
-      url: `${getBasePath()}/summary`,
-    },
+    // {
+    //   name: 'Summary',
+    //   url: `${getBasePath()}/summary`,
+    // },
     {
       name: 'Blog',
       url: 'https://atbug.com',
