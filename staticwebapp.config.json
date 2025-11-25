@@ -1,5 +1,14 @@
 {
   "globalHeaders": {
     "Referrer-Policy": "origin-when-cross-origin"
-  } 
+  },
+  "routes": [
+    {
+      "route": "/summary",
+      "methods": [
+        "get"
+      ],
+      "rewrite": "/summary"
+    }
+  ]
 }
