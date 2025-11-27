@@ -1,8 +1,0 @@
-{
-	"navigationFallback": {
-		"rewrite": "/"
-	},
-	"globalHeaders": {
-		"referrer-policy": "strict-origin-when-cross-origin"
-	}
-}

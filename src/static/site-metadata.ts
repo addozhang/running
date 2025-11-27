@@ -16,14 +16,14 @@ const getBasePath = () => {
 
 const data: ISiteMetadataResult = {
   siteTitle: 'Running Page',
-  siteUrl: 'https://running.atbug.com/',
+  siteUrl: 'https://atbug.com/running',
   logo: '/images/logo.png',
   description: 'Personal site and blog',
   navLinks: [
-    // {
-    //   name: 'Summary',
-    //   url: `${getBasePath()}/summary`,
-    // },
+    {
+      name: 'Summary',
+      url: `${getBasePath()}/summary`,
+    },
     {
       name: 'Blog',
       url: 'https://atbug.com',
