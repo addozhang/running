@@ -16,8 +16,8 @@ const getBasePath = () => {
 
 const data: ISiteMetadataResult = {
   siteTitle: 'Running Page',
-  siteUrl: 'https://yihong.run',
-  logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtc69JxHNcmN1ETpMUX4dozAgAN6iPjWalQ&usqp=CAU',
+  siteUrl: 'https://atbug.com/running',
+  logo: '/running/images/logo.png',
   description: 'Personal site and blog',
   navLinks: [
     {
@@ -26,11 +26,11 @@ const data: ISiteMetadataResult = {
     },
     {
       name: 'Blog',
-      url: 'https://github.com/yihong0618/gitblog',
+      url: 'https://atbug.com',
     },
     {
       name: 'About',
-      url: 'https://github.com/yihong0618/running_page/blob/master/README-CN.md',
+      url: 'https://atbug.com/about',
     },
   ],
 };

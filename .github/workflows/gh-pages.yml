@@ -11,7 +11,7 @@ on:
       data_cache_prefix:
         required: true
         type: string
-        default: track_data
+        default: addozhang_track_data
   workflow_call:
     inputs:
       save_data_in_github_cache:
@@ -21,7 +21,7 @@ on:
       data_cache_prefix:
         required: true
         type: string
-        default: track_data
+        default: addozhang_track_data
 
 # Allow one concurrent deployment
 concurrency:
